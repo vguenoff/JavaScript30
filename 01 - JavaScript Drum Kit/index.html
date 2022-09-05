@@ -78,8 +78,8 @@
 
             window.addEventListener('keydown', playSound)
 
-            keys.forEach(key =>
-                key.addEventListener('transitionend', removeTransition),
+            keys.forEach(
+                key => key.addEventListener('transitionend', removeTransition), // there is also 'animationend' event
             )
         </script>
     </body>
