@@ -88,23 +88,96 @@
 
             // Array.prototype.filter()
             // 1. Filter the list of inventors for those who were born in the 1500's
+            const inventorsBornInThe50s = inventors.filter(
+                ({ year }) => year >= 1500 && year < 1600,
+            )
+            console.log(
+                '🚀 ~ file: index.html ~ line 94 ~ inventorsBornInThe50s',
+                inventorsBornInThe50s,
+            )
 
             // Array.prototype.map()
             // 2. Give us an array of the inventors first and last names
+            const inventorsFirstLastName = inventors.map(({ first, last }) => ({
+                first,
+                last,
+            }))
+            console.log(
+                '🚀 ~ file: index.html ~ line 103 ~ inventorsFirstLastName ~ inventorsFirstLastName',
+                inventorsFirstLastName,
+            )
 
             // Array.prototype.sort()
             // 3. Sort the inventors by birthdate, oldest to youngest
+            const inventorsSortedByBirthDate = inventors.sort(
+                (a, b) => a.year - b.year,
+            )
+            console.log(
+                '🚀 ~ file: index.html ~ line 111 ~ inventorsSortedByBirthDate',
+                inventorsSortedByBirthDate,
+            )
 
             // Array.prototype.reduce()
             // 4. How many years did all the inventors live all together?
+            const inventorsLiveAllTogether = inventors.reduce((acc, curVal) => {
+                const lived = curVal.passed - curVal.year
+
+                return acc + lived
+            }, 0)
+            console.log(
+                '🚀 ~ file: index.html ~ line 127 ~ inventorsLiveAllTogether ~ inventorsLiveAllTogether',
+                inventorsLiveAllTogether,
+            )
 
             // 5. Sort the inventors by years lived
+            const inventorsSortedByYearsLived = inventors.sort((a, b) => {
+                // a.year - b.year
+                const aLived = a.passed - a.year
+                const bLived = b.passed - b.year
+
+                return aLived - bLived
+            })
+            console.log(
+                '🚀 ~ file: index.html ~ line 140 ~ inventorsSortedByYearsLived ~ inventorsSortedByYearsLived',
+                inventorsSortedByYearsLived,
+            )
 
             // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
             // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
 
+            fetch(
+                'https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&generator=search&gsrnamespace=0&gsrlimit=100&gsrsearch=Boulevards_in_Paris',
+            )
+                .then(resp => resp.json())
+                .then(data => {
+                    const boulevardsInParis = data.query.pages
+
+                    const boulevardsInParisWithDe = Object.keys(
+                        data.query.pages,
+                    )
+                        .filter(key =>
+                            boulevardsInParis[key].title.trim().includes('de'),
+                        )
+                        .map(key => boulevardsInParis[key])
+
+                    console.log(
+                        '🚀 ~ file: index.html ~ line 149 ~ boulevardsInParisWithDe',
+                        boulevardsInParisWithDe,
+                    )
+                })
+
             // 7. sort Exercise
             // Sort the people alphabetically by last name
+            const peopleAlphabetically = people.sort((a, b) => {
+                const aLast = a.split(', ')[1]
+                const bLast = b.split(', ')[1]
+
+                return aLast.localeCompare(bLast)
+            })
+            console.log(
+                '🚀 ~ file: index.html ~ line 177 ~ peopleAlphabetically ~ peopleAlphabetically',
+                peopleAlphabetically,
+            )
 
             // 8. Reduce Exercise
             // Sum up the instances of each of these
@@ -124,6 +197,20 @@
                 'car',
                 'truck',
             ]
+
+            const dataSumINstances = data.reduce((acc, curVal) => {
+                if (curVal in acc) {
+                    acc[curVal] += 1
+                } else {
+                    acc[curVal] = 1
+                }
+
+                return acc
+            }, {})
+            console.log(
+                '🚀 ~ file: index.html ~ line 210 ~ dataSumINstances ~ dataSumINstances',
+                dataSumINstances,
+            )
         </script>
     </body>
 </html>
