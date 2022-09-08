@@ -169,8 +169,8 @@
             // 7. sort Exercise
             // Sort the people alphabetically by last name
             const peopleAlphabetically = people.sort((a, b) => {
-                const aLast = a.split(', ')[1]
-                const bLast = b.split(', ')[1]
+                const [, aLast] = a.split(', ')
+                const [, bLast] = b.split(', ')
 
                 return aLast.localeCompare(bLast)
             })
