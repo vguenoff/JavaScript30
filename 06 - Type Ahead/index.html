@@ -14,15 +14,94 @@
             </ul>
         </form>
         <script>
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+
+            const searchInput = document.querySelector('.search')
+            const suggestions = document.querySelector('.suggestions')
             const endpoint =
                 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json'
 
+            const cities = []
+
             fetch(endpoint)
                 .then(res => res.json())
-                .then(res => console.log(res))
-                .catch(err => {
-                    throw new Error('Ohnoo.. something went wrong!')
+                .then(res => {
+                    cities.push(...res)
                 })
+                .catch(err => {
+                    console.error('Ohnoo.. something went wrong!', err)
+                })
+
+            function findMatches(cities, wordToMatch) {
+                // regex just for fun, string.includes does the same job
+                // 'g' - global (for the entire string); 'i' case insensitive
+                const regex = new RegExp(wordToMatch, 'gi')
+
+                return cities.filter(
+                    ({ city, state }) =>
+                        city.match(regex) || state.match(regex),
+                )
+            }
+
+            function displayMatches() {
+                const matchArr = findMatches(cities, this.value)
+
+                suggestions.innerHTML = matchArr
+                    .map(({ city, state, population }) => {
+                        const regex = new RegExp(this.value, 'gi')
+                        const cityName = city.replace(
+                            regex,
+                            `<span class="hl">${this.value}</span>`,
+                        )
+
+                        const stateName = state.replace(
+                            regex,
+                            `<span class="hl">${this.value}</span>`,
+                        )
+
+                        return `
+                                <li>
+                                    <span class="name">${cityName}, ${stateName}</span>
+                                    <span class="population">${numberWithCommas(
+                                        population,
+                                    )}</span>
+                                </li>
+                            `
+                    })
+                    .join('')
+            }
+
+            // searchInput.addEventListener('change', displayMatches)
+            searchInput.addEventListener('keyup', displayMatches)
+
+            // function breath(amount) {
+            //     return new Promise((resolve, reject) => {
+            //         if (amount < 500) {
+            //             reject('That is too small of a value.')
+            //         }
+
+            //         setTimeout(() => {
+            //             resolve(`Done for ${amount} ms`)
+            //         }, amount)
+            //     })
+            // }
+
+            // async function go() {
+            //     try {
+            //         await breath(1000)
+            //         await breath(500)
+            //         await breath(1500)
+            //         await breath(400)
+            //         await breath(2000)
+            //     } catch (err) {
+            //         console.error('Ohh noo')
+            //         console.error(err)
+            //     }
+            // }
+
+            // go()
         </script>
     </body>
 </html>
